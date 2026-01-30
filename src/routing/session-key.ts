@@ -149,7 +149,7 @@ export function buildAgentPeerSessionKey(params: {
       return `agent:${normalizeAgentId(params.agentId)}:dm:${peerId}`;
     }
     const accountId = normalizeAccountId(params.accountId);
-    if (accountId && accountId !== DEFAULT_ACCOUNT_ID) {
+    if (accountId !== DEFAULT_ACCOUNT_ID) {
       if (dmScope === "main") {
         return (
           buildAgentMainSessionKey({
@@ -170,7 +170,7 @@ export function buildAgentPeerSessionKey(params: {
   const accountId = normalizeAccountId(params.accountId);
   const baseKey = `agent:${normalizeAgentId(params.agentId)}:${channel}:${peerKind}:${peerId}`;
 
-  if (accountId && accountId !== DEFAULT_ACCOUNT_ID) {
+  if (accountId !== DEFAULT_ACCOUNT_ID) {
     return `${baseKey}:${accountId}`;
   }
   return baseKey;

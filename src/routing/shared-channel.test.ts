@@ -8,7 +8,7 @@ const mockConfig: MoltbotConfig = {
     discord: {
       enabled: true,
       accounts: {
-        bot_a: { token: "taken_a" },
+        bot_a: { token: "token_a" },
         bot_b: { token: "token_b" },
       },
     },

@@ -237,9 +237,9 @@ export const AgentSandboxSchema = z
     scope: z.union([z.literal("session"), z.literal("agent"), z.literal("shared")]).optional(),
     perSession: z.boolean().optional(),
     workspaceRoot: z.string().optional(),
-    docker: SandboxDockerSchema,
-    browser: SandboxBrowserSchema,
-    prune: SandboxPruneSchema,
+    docker: SandboxDockerSchema.optional(),
+    browser: SandboxBrowserSchema.optional(),
+    prune: SandboxPruneSchema.optional(),
   })
   .strict()
   .optional();

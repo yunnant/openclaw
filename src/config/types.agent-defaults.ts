@@ -5,11 +5,7 @@ import type {
   TypingMode,
 } from "./types.base.js";
 import type { ChannelId } from "../channels/plugins/types.js";
-import type {
-  SandboxBrowserSettings,
-  SandboxDockerSettings,
-  SandboxPruneSettings,
-} from "./types.sandbox.js";
+import type { SandboxSettings } from "./types.sandbox.js";
 import type { MemorySearchConfig } from "./types.tools.js";
 
 export type AgentModelEntryConfig = {
@@ -206,35 +202,7 @@ export type AgentDefaultsConfig = {
     model?: string | { primary?: string; fallbacks?: string[] };
   };
   /** Optional sandbox settings for non-main sessions. */
-  sandbox?: {
-    /** Enable sandboxing for sessions. */
-    mode?: "off" | "non-main" | "all";
-    /**
-     * Agent workspace access inside the sandbox.
-     * - "none": do not mount the agent workspace into the container; use a sandbox workspace under workspaceRoot
-     * - "ro": mount the agent workspace read-only; disables write/edit tools
-     * - "rw": mount the agent workspace read/write; enables write/edit tools
-     */
-    workspaceAccess?: "none" | "ro" | "rw";
-    /**
-     * Session tools visibility for sandboxed sessions.
-     * - "spawned": only allow session tools to target sessions spawned from this session (default)
-     * - "all": allow session tools to target any session
-     */
-    sessionToolsVisibility?: "spawned" | "all";
-    /** Container/workspace scope for sandbox isolation. */
-    scope?: "session" | "agent" | "shared";
-    /** Legacy alias for scope ("session" when true, "shared" when false). */
-    perSession?: boolean;
-    /** Root directory for sandbox workspaces. */
-    workspaceRoot?: string;
-    /** Docker-specific sandbox settings. */
-    docker?: SandboxDockerSettings;
-    /** Optional sandboxed browser settings. */
-    browser?: SandboxBrowserSettings;
-    /** Auto-prune sandbox containers. */
-    prune?: SandboxPruneSettings;
-  };
+  sandbox?: SandboxSettings;
 };
 
 export type AgentCompactionMode = "default" | "safeguard";

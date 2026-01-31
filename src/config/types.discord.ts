@@ -8,6 +8,7 @@ import type {
 } from "./types.base.js";
 import type { ChannelHeartbeatVisibilityConfig } from "./types.channels.js";
 import type { DmConfig, ProviderCommandsConfig } from "./types.messages.js";
+import type { SandboxSettings } from "./types.sandbox.js";
 import type { GroupToolPolicyBySenderConfig, GroupToolPolicyConfig } from "./types.tools.js";
 
 export type DiscordDmConfig = {
@@ -29,6 +30,8 @@ export type DiscordGuildChannelConfig = {
   /** Optional tool policy overrides for this channel. */
   tools?: GroupToolPolicyConfig;
   toolsBySender?: GroupToolPolicyBySenderConfig;
+  /** Optional sandbox settings for this channel. Override agent settings. */
+  sandbox?: SandboxSettings;
   /** If specified, only load these skills for this channel. Omit = all skills; empty = no skills. */
   skills?: string[];
   /** If false, disable the bot for this channel. */
@@ -47,6 +50,8 @@ export type DiscordGuildEntry = {
   /** Optional tool policy overrides for this guild (used when channel override is missing). */
   tools?: GroupToolPolicyConfig;
   toolsBySender?: GroupToolPolicyBySenderConfig;
+  /** Optional sandbox settings for this guild. Override agent settings. */
+  sandbox?: SandboxSettings;
   /** Reaction notification mode (off|own|all|allowlist). Default: own. */
   reactionNotifications?: DiscordReactionNotificationMode;
   users?: Array<string | number>;

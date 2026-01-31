@@ -14,7 +14,7 @@ import {
   RetryConfigSchema,
   requireOpenAllowFrom,
 } from "./zod-schema.core.js";
-import { ToolPolicySchema } from "./zod-schema.agent-runtime.js";
+import { ToolPolicySchema, AgentSandboxSchema } from "./zod-schema.agent-runtime.js";
 import { ChannelHeartbeatVisibilitySchema } from "./zod-schema.channels.js";
 import {
   normalizeTelegramCommandDescription,
@@ -191,6 +191,7 @@ export const DiscordGuildChannelSchema = z
     requireMention: z.boolean().optional(),
     tools: ToolPolicySchema,
     toolsBySender: ToolPolicyBySenderSchema,
+    sandbox: AgentSandboxSchema,
     skills: z.array(z.string()).optional(),
     enabled: z.boolean().optional(),
     users: z.array(z.union([z.string(), z.number()])).optional(),
@@ -205,6 +206,7 @@ export const DiscordGuildSchema = z
     requireMention: z.boolean().optional(),
     tools: ToolPolicySchema,
     toolsBySender: ToolPolicyBySenderSchema,
+    sandbox: AgentSandboxSchema,
     reactionNotifications: z.enum(["off", "own", "all", "allowlist"]).optional(),
     users: z.array(z.union([z.string(), z.number()])).optional(),
     channels: z.record(z.string(), DiscordGuildChannelSchema.optional()).optional(),

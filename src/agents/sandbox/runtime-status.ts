@@ -39,6 +39,16 @@ function resolveComparableSessionKeyForSandbox(params: {
 export function resolveSandboxRuntimeStatus(params: {
   cfg?: OpenClawConfig;
   sessionKey?: string;
+  sandboxOverride?: {
+    mode?: "off" | "non-main" | "all";
+    scope?: "session" | "agent" | "shared";
+    perSession?: boolean;
+    workspaceAccess?: "none" | "ro" | "rw";
+    workspaceRoot?: string;
+    docker?: import("../../config/types.sandbox.js").SandboxDockerSettings;
+    browser?: import("../../config/types.sandbox.js").SandboxBrowserSettings;
+    prune?: import("../../config/types.sandbox.js").SandboxPruneSettings;
+  };
 }): {
   agentId: string;
   sessionKey: string;
@@ -53,7 +63,7 @@ export function resolveSandboxRuntimeStatus(params: {
     config: params.cfg,
   });
   const cfg = params.cfg;
-  const sandboxCfg = resolveSandboxConfigForAgent(cfg, agentId);
+  const sandboxCfg = resolveSandboxConfigForAgent(cfg, agentId, params.sandboxOverride);
   const mainSessionKey = resolveMainSessionKeyForSandbox({ cfg, agentId });
   const sandboxed = sessionKey
     ? shouldSandboxSession(

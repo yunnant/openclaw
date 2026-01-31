@@ -7,6 +7,7 @@ import {
   type ChannelMatchSource,
 } from "../../channels/channel-config.js";
 import type { AllowlistMatch } from "../../channels/allowlist-match.js";
+import type { SandboxSettings } from "../../config/types.sandbox.js";
 import { formatDiscordUserTag } from "./format.js";
 
 export type DiscordAllowList = {
@@ -33,8 +34,10 @@ export type DiscordGuildEntryResolved = {
       users?: Array<string | number>;
       systemPrompt?: string;
       autoThread?: boolean;
+      sandbox?: SandboxSettings;
     }
   >;
+  sandbox?: SandboxSettings;
 };
 
 export type DiscordChannelConfigResolved = {
@@ -45,6 +48,7 @@ export type DiscordChannelConfigResolved = {
   users?: Array<string | number>;
   systemPrompt?: string;
   autoThread?: boolean;
+  sandbox?: SandboxSettings;
   matchKey?: string;
   matchSource?: ChannelMatchSource;
 };
@@ -215,6 +219,7 @@ function resolveDiscordChannelConfigEntry(
     users: entry.users,
     systemPrompt: entry.systemPrompt,
     autoThread: entry.autoThread,
+    sandbox: entry.sandbox,
   };
   return resolved;
 }

@@ -124,6 +124,16 @@ export function resolveSandboxPruneConfig(params: {
 export function resolveSandboxConfigForAgent(
   cfg?: OpenClawConfig,
   agentId?: string,
+  sandboxOverride?: {
+    mode?: "off" | "non-main" | "all";
+    scope?: "session" | "agent" | "shared";
+    perSession?: boolean;
+    workspaceAccess?: "none" | "ro" | "rw";
+    workspaceRoot?: string;
+    docker?: import("../../config/types.sandbox.js").SandboxDockerSettings;
+    browser?: import("../../config/types.sandbox.js").SandboxBrowserSettings;
+    prune?: import("../../config/types.sandbox.js").SandboxPruneSettings;
+  },
 ): SandboxConfig {
   const agent = cfg?.agents?.defaults?.sandbox;
 
@@ -134,28 +144,31 @@ export function resolveSandboxConfigForAgent(
     agentSandbox = agentConfig.sandbox;
   }
 
+  // Channel/guild-specific sandbox override (from channelConfig.sandbox)
+  const effectiveSandbox = sandboxOverride ?? agentSandbox;
+
   const scope = resolveSandboxScope({
-    scope: agentSandbox?.scope ?? agent?.scope,
-    perSession: agentSandbox?.perSession ?? agent?.perSession,
+    scope: effectiveSandbox?.scope ?? agent?.scope,
+    perSession: effectiveSandbox?.perSession ?? agent?.perSession,
   });
 
   const toolPolicy = resolveSandboxToolPolicyForAgent(cfg, agentId);
 
   return {
-    mode: agentSandbox?.mode ?? agent?.mode ?? "off",
+    mode: effectiveSandbox?.mode ?? agent?.mode ?? "off",
     scope,
-    workspaceAccess: agentSandbox?.workspaceAccess ?? agent?.workspaceAccess ?? "none",
+    workspaceAccess: effectiveSandbox?.workspaceAccess ?? agent?.workspaceAccess ?? "none",
     workspaceRoot:
-      agentSandbox?.workspaceRoot ?? agent?.workspaceRoot ?? DEFAULT_SANDBOX_WORKSPACE_ROOT,
+      effectiveSandbox?.workspaceRoot ?? agent?.workspaceRoot ?? DEFAULT_SANDBOX_WORKSPACE_ROOT,
     docker: resolveSandboxDockerConfig({
       scope,
       globalDocker: agent?.docker,
-      agentDocker: agentSandbox?.docker,
+      agentDocker: effectiveSandbox?.docker,
     }),
     browser: resolveSandboxBrowserConfig({
       scope,
       globalBrowser: agent?.browser,
-      agentBrowser: agentSandbox?.browser,
+      agentBrowser: effectiveSandbox?.browser,
     }),
     tools: {
       allow: toolPolicy.allow,
@@ -164,7 +177,7 @@ export function resolveSandboxConfigForAgent(
     prune: resolveSandboxPruneConfig({
       scope,
       globalPrune: agent?.prune,
-      agentPrune: agentSandbox?.prune,
+      agentPrune: effectiveSandbox?.prune,
     }),
   };
 }

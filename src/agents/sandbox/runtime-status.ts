@@ -36,6 +36,29 @@ function resolveComparableSessionKeyForSandbox(params: {
   });
 }
 
+function resolveSandboxOverrideFromConfig(cfg: OpenClawConfig | undefined, sessionKey: string) {
+  if (!cfg?.channels?.discord) return undefined;
+  const parts = sessionKey.split(":");
+  if (parts.length < 5 || parts[2] !== "discord") return undefined;
+
+  const peerKind = parts[3];
+  const peerId = parts[4];
+
+  const discord = cfg.channels.discord;
+  const accounts = [discord, ...Object.values(discord.accounts ?? {})];
+
+  for (const account of accounts) {
+    if (!account?.guilds) continue;
+    for (const guildId in account.guilds) {
+      const guild = account.guilds[guildId];
+      if (peerKind === "channel" && guild.channels?.[peerId]?.sandbox) {
+        return guild.channels[peerId].sandbox;
+      }
+    }
+  }
+  return undefined;
+}
+
 export function resolveSandboxRuntimeStatus(params: {
   cfg?: OpenClawConfig;
   sessionKey?: string;
@@ -63,7 +86,9 @@ export function resolveSandboxRuntimeStatus(params: {
     config: params.cfg,
   });
   const cfg = params.cfg;
-  const sandboxCfg = resolveSandboxConfigForAgent(cfg, agentId, params.sandboxOverride);
+  const configOverride = resolveSandboxOverrideFromConfig(cfg, sessionKey);
+  const effectiveOverride = params.sandboxOverride ?? configOverride;
+  const sandboxCfg = resolveSandboxConfigForAgent(cfg, agentId, effectiveOverride);
   const mainSessionKey = resolveMainSessionKeyForSandbox({ cfg, agentId });
   const sandboxed = sessionKey
     ? shouldSandboxSession(
